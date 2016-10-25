@@ -1,17 +1,58 @@
-//npm package inquirer
-var inquirer = require('inquirer');
-//require the wordbank from game.js
-var wordbank = require('./game.js');
-//require constructors created in word.js
-var letters = require('./word.js');
+var Letter = require('./letter.js');
 
-//
-var word = new Wordbank();
-//number of guesses
-var numGuess = 12;
-//create a random word from the wordbank constructor
-var randomWord = new letters(word.word[Math.floor(Math.random() * word.word.length)]);
-//guesses array
-var userGuess = [];
-//place correct letters here
-randomWord.getLetters();
+function Word(randomWord) {
+	this.randomWord = randomWord;
+	this.lettersGuessed = [];
+	this.found = false;
+
+	this.getLetters = function() {
+		for (var i = 0; i < this.randomWord.length; i++) {
+			var letterConstructor = new Letter(this.randomWord[i]);
+			this.lettersGuessed.push(letterConstructor);
+		}
+
+		if (this.findWord()) {
+			return true;
+		} else {
+			return false;
+		}		
+	};
+
+	this.findWord = function() {
+		var count = 0;
+		for (var i = 0; i < this.lettersGuessed.length; i++) {
+			if (this.lettersGuessed[i].appear === true) {
+				count++;
+			}
+		}
+		if (count === this.randomWord.length) {
+			this.found = true;
+		} 
+		return this.found;
+	};
+
+	this.lettersFound = function(guessLetter) {
+		var whatToReturn = 0;
+		for (var i = 0; i < this.lettersGuessed.length; i++) {
+			if (this.lettersGuessed[i].letterGuessed === guessLetter) {
+				this.lettersGuessed[i].appear = true;
+				whatToReturn++;
+			}
+		}
+		return whatToReturn;
+	};
+
+	this.wordRender = function() {
+		var str = "";
+		for (var i = 0; i < this.lettersGuessed.length; i++) {
+			if (this.lettersGuessed[i].appear) {
+				str += this.lettersGuessed[i].letterGuessed;
+			} else {
+				str += "_ ";
+			}
+		}
+		return str;
+	};
+}
+
+module.exports = Word;

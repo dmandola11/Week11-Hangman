@@ -20,6 +20,8 @@
   },
   "homepage": "https://github.com/dmandola11/Week11-Hangman#readme",
   "dependencies": {
-    "inquire": "^0.4.8"
+    "inquire": "^0.4.8",
+    "inquirer": "^1.2.2",
+    "require": "^2.4.20"
   }
 }
